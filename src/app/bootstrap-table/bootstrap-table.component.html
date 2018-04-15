@@ -1,0 +1,44 @@
+
+<div class="card text-white">
+  <div class="card-header bg-primary font-weight-bold border-bottom-0">
+    {{ pageName }}
+    <div class="float-right">
+      <div *ngIf="showExportBtns" class="btn-group  mr-1" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-success ">CSV</button>
+        <button type="button" class="btn btn-success border-left">XLS</button>
+        <button type="button" class="btn btn-success border-left">PDF</button>
+      </div>
+      <button type="button" class="btn btn-success">Refresh</button>
+      <a *ngIf="showAddBtn" class="btn btn-success"> Add </a>
+    </div>
+  </div>
+</div>
+
+
+<table class="table dataTable" ngClass="{{_config.className || ''}}"
+  role="grid" style="width: 100%;">
+<thead>
+<tr role="row" ngClass="bg-primary">
+ <th class="border-0" *ngFor="let column of _columns" [ngTableSorting]="_config" [column]="column" 
+     (sortChanged)="onChangeTable($event)" ngClass="{{column.className || ''}}">
+   {{column.title}}
+   <i *ngIf="_config && column.sort" class="fa"
+     [ngClass]="{'fa-chevron-down': column.sort === 'desc', 'fa-chevron-up': column.sort === 'asc'}"></i>
+ </th>
+</tr>
+</thead>
+<tbody>
+<tr *ngIf="showFilterRow">
+<td *ngFor="let column of columns">
+ <input *ngIf="column.filtering" placeholder="{{column.filtering.placeholder}}"
+        [ngTableFiltering]="column.filtering"
+        class="form-control"
+        
+        (tableChanged)="onChangeTable(_config)"/>
+</td>
+</tr>
+<tr *ngFor="let row of rows">
+ <td class="text-center" (click)="cellClick(row, column.name)" *ngFor="let column of columns" [innerHtml]="sanitize(getData(row, column.name))"></td>
+</tr>
+</tbody>
+</table>
